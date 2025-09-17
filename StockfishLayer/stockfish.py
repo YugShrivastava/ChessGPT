@@ -53,18 +53,27 @@ class Stockfish:
 
             pv = entry.get("pv", [])
 
+            pv_board = board.copy()
+            for move in pv:
+                pv_board.push(move)
+            final_fen = pv_board.fen()
+
+            print("Initial fen:", fen)
+            print("Final fen:", final_fen)
+
             analysis.append({
                 "score": {
                     "white": score_white,
                     "black": score_black
                 },
-                "pv": self._moves_to_san(board, pv)
+                "pv_san": self._moves_to_san(board, pv),
+                "pv_uci": [m.uci() for m in pv],  # keep raw moves too
+                "final_fen": final_fen
             })
 
-        print(analysis)
         self.analysis = analysis
         return analysis
-    
+
     def get_analysis(self):
         return self.analysis
 
