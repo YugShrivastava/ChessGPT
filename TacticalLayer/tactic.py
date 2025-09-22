@@ -16,7 +16,7 @@ class TacticalAnalyzer():
         self.feature_extractor = ChessFeatureExtractor()
         self.analysis = []
     
-    def tactical_analysis(self, fen_before, fen_after, time_limit=0.1, multipv=1):
+    def analysis(self, fen_before, fen_after, time_limit=0.1, multipv=1):
         self.analysis_before = self.stockfish.analyze(fen_before, time_limit=time_limit, multipv=multipv)
         self.analysis_after = self.stockfish.analyze(fen_after, time_limit=time_limit, multipv=multipv)
 
@@ -32,8 +32,9 @@ class TacticalAnalyzer():
 
         else:
             self.analysis = self.analysis_after
+            self.analysis["tactic"] = {}
 
-    def get_tactical_analysis(self):
+    def get_analysis(self):
         return self.analysis
 
     def quit(self):
@@ -42,7 +43,7 @@ class TacticalAnalyzer():
 
 if __name__ == "__main__":
     tactical_analyzer = TacticalAnalyzer()
-    tactical_analyzer.tactical_analysis("r1b1k2r/ppp2ppp/2nqpn2/3pN3/3P1P2/3B4/PPPN1PPP/R2QK2R w KQkq - 0 1", "r1b1k2r/ppp2ppp/2n1pn2/3pq3/3P1P2/3B4/PPPN1PPP/R2QK2R w KQkq - 0 1", 1.0, 1)
-    print(tactical_analyzer.get_tactical_analysis())
+    tactical_analyzer.analysis("r1b1k2r/ppp2ppp/2nqpn2/3pN3/3P1P2/3B4/PPPN1PPP/R2QK2R w KQkq - 0 1", "r1b1k2r/ppp2ppp/2n1pn2/3pq3/3P1P2/3B4/PPPN1PPP/R2QK2R w KQkq - 0 1", 1.0, 1)
+    print(tactical_analyzer.get_analysis())
 
     tactical_analyzer.quit()
