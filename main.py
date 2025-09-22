@@ -2,6 +2,10 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from analyze import get_analysis
+from dotenv import load_dotenv
+from LLM.chat import chat
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -24,9 +28,9 @@ class FENModel(BaseModel):
     fen_after: str
 
 @app.post("/analyze")
-async def analysis(data: FENModel, request: Request):
+async def analysis(data: FENModel):
     try:
-        get_analysis(data.fen_before, data.fen_after)
-        return {"status": "success", "fen": data.fen}
+        res = chat(get_analysis(data.fen_before, data.fen_after))
+        return {"status": "success", "message": res}
     except Exception as e:
         return {"status": "error", "message": f"An error occurred while processing the request. Says {e}"}

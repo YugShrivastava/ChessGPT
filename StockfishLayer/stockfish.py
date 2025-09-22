@@ -1,9 +1,10 @@
 import chess
 import chess.engine
+import os
 
 class Stockfish:
-    def __init__(self, path, threads=1, hash_size=16, skill_level=15, uci_elo=1320):
-        self.engine = chess.engine.SimpleEngine.popen_uci(path)
+    def __init__(self, threads=1, hash_size=16, skill_level=20, uci_elo=2600):
+        self.engine = chess.engine.SimpleEngine.popen_uci(os.getenv("STOCKFISH_PATH"))
         self.engine.configure({
             "Threads": threads,
             "Hash": hash_size,
@@ -39,7 +40,7 @@ class Stockfish:
             return score_obj.score()
 
 
-    def analyze(self, fen, time_limit=0.1, multipv=3):
+    def analyze(self, fen, time_limit=0.1, multipv=1):
         board = chess.Board(fen)
         info = self.engine.analyse(board, chess.engine.Limit(time=time_limit), multipv=multipv)
         analysis = []
@@ -57,9 +58,6 @@ class Stockfish:
             for move in pv:
                 pv_board.push(move)
             final_fen = pv_board.fen()
-
-            print("Initial fen:", fen)
-            print("Final fen:", final_fen)
 
             analysis.append({
                 "score": {
@@ -83,10 +81,9 @@ class Stockfish:
 
 
 if __name__ == "__main__":
-    stockfish_path = "/home/yug/Downloads/stockfish-ubuntu-x86-64-avx2/stockfish/stockfish-ubuntu-x86-64-avx2"
-    stockfish = Stockfish(stockfish_path, threads=2, hash_size=16, skill_level=15, uci_elo=1320)
+    stockfish = Stockfish(threads=2, hash_size=16, skill_level=15, uci_elo=1320)
 
-    fen = "r1bqk2r/1pp1ppbp/p2p1np1/8/Pn1PPB2/2N2N1P/1PP2PP1/R2QKB1R b KQkq - 2 8"
+    fen = "r2qk2r/1p2bppp/p1n1p1n1/2PpP3/BP6/5N1P/P1P2PP1/R1BQK2R w KQkq - 1 12"
     stockfish.analyze(fen, time_limit=0.1, multipv=3)
 
     stockfish.quit()
