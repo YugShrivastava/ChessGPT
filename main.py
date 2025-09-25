@@ -24,13 +24,12 @@ app.add_middleware(
 )
 
 class FENModel(BaseModel):
-    fen_before: str
-    fen_after: str
+    fen: str
 
 @app.post("/analyze")
 async def analysis(data: FENModel):
     try:
-        res = chat(get_analysis(data.fen_before, data.fen_after))
+        res = chat(get_analysis(data.fen))
         return {"status": "success", "message": res}
     except Exception as e:
         return {"status": "error", "message": f"An error occurred while processing the request. Says {e}"}
