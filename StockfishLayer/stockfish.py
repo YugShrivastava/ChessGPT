@@ -1,6 +1,9 @@
 import chess
 import chess.engine
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Stockfish:
     def __init__(self, threads=1, hash_size=16, skill_level=20, uci_elo=2600):
@@ -25,19 +28,19 @@ class Stockfish:
                 break
         return san_moves
 
-    # def _format_score(self, score_obj):
-    #     if score_obj.is_mate():
-    #         mate = score_obj.mate()
-    #         return f"# {mate}" if mate > 0 else f"# -{abs(mate)}"
-    #     else:
-    #         return score_obj.score()
-
     def _format_score(self, score_obj):
         if score_obj.is_mate():
             mate = score_obj.mate()
-            return 100000 if mate > 0 else -100000
+            return f"# {mate}" if mate > 0 else f"# -{abs(mate)}"
         else:
             return score_obj.score()
+
+    # def _format_score(self, score_obj):
+    #     if score_obj.is_mate():
+    #         mate = score_obj.mate()
+    #         return 100000 if mate > 0 else -100000
+    #     else:
+    #         return score_obj.score()
 
 
     def analyze(self, fen, time_limit=0.1, multipv=1):
@@ -65,7 +68,6 @@ class Stockfish:
                     "black": score_black
                 },
                 "pv_san": self._moves_to_san(board, pv),
-                "pv_uci": [m.uci() for m in pv],  # keep raw moves too
                 "final_fen": final_fen
             })
 
@@ -83,7 +85,7 @@ class Stockfish:
 if __name__ == "__main__":
     stockfish = Stockfish(threads=2, hash_size=16, skill_level=15, uci_elo=1320)
 
-    fen = "r2qk2r/1p2bppp/p1n1p1n1/2PpP3/BP6/5N1P/P1P2PP1/R1BQK2R w KQkq - 1 12"
-    stockfish.analyze(fen, time_limit=0.1, multipv=3)
-
+    fen = "r2q1rk1/pp2ppbp/1np2np1/2Q3B1/3PP1b1/2N2N2/PP3PPP/3RKB1R b K - 6 11"
+    out = stockfish.analyze(fen, time_limit=0.1, multipv=1)
+    print(out)
     stockfish.quit()
