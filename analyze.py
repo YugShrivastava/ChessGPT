@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 def get_analysis(fen: str):
     tactical_analyzer = TacticalAnalyzer()
     tactical_analyzer.analyze(fen, time_limit=1.0, multipv=1)
