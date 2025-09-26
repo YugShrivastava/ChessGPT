@@ -12,11 +12,10 @@ class TacticalAnalyzer():
         self.feature_extractor = ChessFeatureExtractor()
         self.analysis = []
 
-    def analyze(self, fen, time_limit=0.1, multipv=1):
-        analysis = self.stockfish.analyze(fen, time_limit=time_limit, multipv=multipv)
+    def analyze(self, fen, time_limit=0.1, multipv=1, depth=12):
+        analysis = self.stockfish.analyze(fen, time_limit=time_limit, multipv=multipv, depth=depth)
 
         for pv in analysis:
-            print(pv)
             positional_analysis_after_n_moves = self.feature_extractor.extract_features(pv["final_fen"], fen)
             self.analysis.append(analysis)
             self.analysis.append(positional_analysis_after_n_moves)

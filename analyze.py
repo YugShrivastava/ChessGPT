@@ -1,12 +1,8 @@
-from FeatureExtractor.position import ChessFeatureExtractor
 from TacticalLayer.tactic import TacticalAnalyzer
-from dotenv import load_dotenv
 
-load_dotenv()
-
-def get_analysis(fen: str):
+def get_analysis(fen: str, depth=12): # TODO: adding depth variable to analyze route
     tactical_analyzer = TacticalAnalyzer()
-    tactical_analyzer.analyze(fen, time_limit=1.0, multipv=1)
+    tactical_analyzer.analyze(fen, time_limit=1.0, multipv=1, depth=depth)
     analysis = tactical_analyzer.get_analysis()[0]
 
     tactical_analyzer.quit()

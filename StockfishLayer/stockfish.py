@@ -35,6 +35,7 @@ class Stockfish:
         else:
             return score_obj.score()
 
+    #TODO: format score in convention +-32000
     # def _format_score(self, score_obj):
     #     if score_obj.is_mate():
     #         mate = score_obj.mate()
@@ -43,9 +44,9 @@ class Stockfish:
     #         return score_obj.score()
 
 
-    def analyze(self, fen, time_limit=0.1, multipv=1):
+    def analyze(self, fen, time_limit=0.1, multipv=1, depth=12):
         board = chess.Board(fen)
-        info = self.engine.analyse(board, chess.engine.Limit(time=time_limit), multipv=multipv)
+        info = self.engine.analyse(board, chess.engine.Limit(time=time_limit, depth=depth), multipv=multipv)
         analysis = []
     
         for entry in info:
